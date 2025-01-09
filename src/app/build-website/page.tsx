@@ -1,60 +1,53 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import StarField from '@/components/star-field'
-import { Navbar } from '@/components/navbar'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from "@/lib/utils"
 
-export default function BuildWebsiteForm() {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const router = useRouter()
+const navItems = [
+  { href: '/dashboard', label: 'Services' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/contact', label: 'Contact' },
+]
 
-  useEffect(() => {
-    setIsLoaded(true)
-  }, [])
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    // Here you would typically handle form submission, e.g., send data to an API
-    console.log('Form submitted')
-    // For now, we'll just redirect to a thank you page
-    router.push('/thank-you')
-  }
+export function Navbar() {
+  const pathname = usePathname()
 
   return (
-    <main className="relative min-h-screen w-full bg-black overflow-hidden flex items-center justify-center">
-      <StarField />
-      <Navbar />
-      <div className={`relative z-10 w-full max-w-md px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-xl transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        <h1 className="text-3xl font-bold text-center text-white mb-6">Build Your Website</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="email" className="text-white">Email</Label>
-            <Input type="email" id="email" placeholder="your@email.com" required className="bg-white/20 text-white placeholder-gray-300" />
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/dashboard" className="text-white font-bold text-xl">
+              YourLogo
+            </Link>
           </div>
-          <div>
-            <Label htmlFor="serviceType" className="text-white">Service Type</Label>
-            <Input type="text" id="serviceType" value="Build Your Website" disabled className="bg-white/20 text-white" />
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium relative group",
+                    pathname === item.href && "text-white"
+                  )}
+                >
+                  {item.label}
+                  <span 
+                    className={cn(
+                      "absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
+                      pathname === item.href && "scale-x-100"
+                    )}
+                  ></span>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div>
-            <Label htmlFor="mobile" className="text-white">Mobile Number</Label>
-            <Input type="tel" id="mobile" placeholder="+1234567890" required className="bg-white/20 text-white placeholder-gray-300" />
-          </div>
-          <div>
-            <Label htmlFor="firstName" className="text-white">First Name</Label>
-            <Input type="text" id="firstName" placeholder="John" required className="bg-white/20 text-white placeholder-gray-300" />
-          </div>
-          <div>
-            <Label htmlFor="lastName" className="text-white">Last Name</Label>
-            <Input type="text" id="lastName" placeholder="Doe" required className="bg-white/20 text-white placeholder-gray-300" />
-          </div>
-          <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white">Submit</Button>
-        </form>
+        </div>
       </div>
-    </main>
+    </nav>
   )
 }
 
