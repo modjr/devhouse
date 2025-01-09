@@ -1,10 +1,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import StarField from '@/components/star-field'
+import { Navbar } from '@/components/navbar'
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
-import { Navbar } from '@/components/navbar'
+import { Rocket, Code } from 'lucide-react'
+
+const services = [
+  { title: 'Build Your Website', href: '/build-website', icon: <Rocket className="w-8 h-8" />, disabled: false },
+  { title: 'Build Your App', href: '/build-app', icon: <Code className="w-8 h-8" />, disabled: false },
+];
 
 export default function Dashboard() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -14,39 +21,62 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <main className="relative min-h-screen w-full bg-black overflow-hidden flex items-center justify-center">
+    <main className="relative min-h-screen w-full bg-black overflow-hidden flex flex-col items-center justify-center">
       <StarField />
       <Navbar />
-      <div className={`relative z-10 flex flex-col items-center gap-8 text-white w-full max-w-4xl px-4 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-        <h1 className="text-4xl md:text-5xl font-bold mb-8 transition-transform delay-300 duration-700 ease-out transform translate-y-10 opacity-0" style={{ transitionDelay: '300ms', ...(isLoaded && { transform: 'translateY(0)', opacity: 1 }) }}>
-          Choose A Service
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-          {['Build Your Website', 'Build Your App', 'Consulting'].map((text, index) => (
-            <div key={text} className="w-full transition-transform duration-700 ease-out transform translate-y-10 opacity-0" style={{ transitionDelay: `${500 + index * 200}ms`, ...(isLoaded && { transform: 'translateY(0)', opacity: 1 }) }}>
-              {index === 1 ? (
-                <Button 
-                  variant="outline" 
-                  className="w-full text-lg py-8 bg-white/5 backdrop-blur-sm border-white/20 opacity-50 cursor-not-allowed"
-                  disabled
+      <motion.div
+        className="relative z-10 w-full max-w-4xl px-4 py-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.8 }}
+      >
+        <motion.h1
+          className="text-4xl md:text-6xl font-bold text-center text-white mb-8 font-orbitron"
+          initial={{ y: -50 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
+        >
+          Mission Control Center
+        </motion.h1>
+        <motion.p
+          className="text-xl text-center text-[#17b6a7] mb-12"
+          initial={{ y: -30 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.4, type: 'spring', stiffness: 120 }}
+        >
+          Select your cosmic journey
+        </motion.p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {services.map((service, index) => (
+            <motion.div
+              key={service.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 + index * 0.2 }}
+            >
+              <Link href={service.href} className="block w-full" aria-disabled={service.disabled}>
+                <Button
+                  variant="outline"
+                  className={`w-full h-40 text-lg py-8 bg-white/5 backdrop-blur-sm border-white/20 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-4 ${
+                    service.disabled ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={service.disabled}
                 >
-                  {text}
-                  <span className="block text-sm mt-2">Coming Soon</span>
-                </Button>
-              ) : (
-                <Link href={index === 0 ? "/build-website" : "/consulting"} className="w-full">
-                  <Button 
-                    variant="outline" 
-                    className="w-full text-lg py-8 bg-white/5 backdrop-blur-sm border-white/20 hover:bg-white/10 transition-all duration-300"
+                  <motion.div
+                    className="text-[#17b6a7]"
+                    whileHover={{ scale: 1.2, rotate: 360 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                   >
-                    {text}
-                  </Button>
-                </Link>
-              )}
-            </div>
+                    {service.icon}
+                  </motion.div>
+                  <span className="font-orbitron">{service.title}</span>
+                  {service.disabled && <span className="text-sm text-gray-400">Coming Soon</span>}
+                </Button>
+              </Link>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </main>
   )
 }
