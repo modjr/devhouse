@@ -7,6 +7,7 @@ import { Navbar } from '@/components/navbar'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { motion } from 'framer-motion'
 
 export default function BuildWebsiteForm() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -28,7 +29,12 @@ export default function BuildWebsiteForm() {
     <main className="relative min-h-screen w-full bg-black overflow-hidden flex items-center justify-center">
       <StarField />
       <Navbar />
-      <div className={`relative z-10 w-full max-w-md px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-xl transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+      <motion.div
+        className={`relative z-10 w-full max-w-md px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-xl`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
+        transition={{ duration: 0.8 }}
+      >
         <h1 className="text-3xl font-bold text-center text-white mb-6">Build Your Website</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -51,9 +57,9 @@ export default function BuildWebsiteForm() {
             <Label htmlFor="lastName" className="text-white">Last Name</Label>
             <Input type="text" id="lastName" placeholder="Doe" required className="bg-white/20 text-white placeholder-gray-300" />
           </div>
-          <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white">Submit</Button>
+          <Button type="submit" className="w-full bg-[#17b6a7] hover:bg-[#14a090] text-white">Submit</Button>
         </form>
-      </div>
+      </motion.div>
     </main>
   )
 }

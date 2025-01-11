@@ -1,25 +1,24 @@
-import "./globals.css";
-import { Navbar } from "@/components/navbar";
+import type { Metadata } from 'next'
+import { Inter, Orbitron } from 'next/font/google'
+import './globals.css'
 
-import Footer from "@/components/Footer";
+const inter = Inter({ subsets: ['latin'] })
+const orbitron = Orbitron({ subsets: ['latin'], variable: '--font-orbitron' })
 
-export const metadata = {
-  title: "DevHouse - Software Solutions",
-  description: "High-quality websites and software solutions.",
-};
+export const metadata: Metadata = {
+  title: 'DevHouse',
+  description: 'Your cosmic journey in web development starts here',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 text-gray-800">
-        <Navbar></Navbar>
-        <main>{children}</main>
-        
-      </body>
+      <body className={`${inter.className} ${orbitron.variable}`}>{children}</body>
     </html>
-  );
+  )
 }
+

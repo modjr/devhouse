@@ -3,11 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from "@/lib/utils"
+import Image from 'next/image'
 
 const navItems = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
+  { href: '/dashboard', label: 'Services' },
   { href: '/projects', label: 'Projects' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ]
 
 export function Navbar() {
@@ -18,9 +21,12 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-white font-bold text-xl">
-              YourLogo
-            </Link>
+        <Image
+          src="/images/logo1.png" // Path relative to the public folder
+          alt="DevHouse Logo"
+          width={150} // Set your preferred width
+          height={150} // Set your preferred height
+        />
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
@@ -52,10 +58,10 @@ export function Navbar() {
 
 <style jsx global>{`
   .group:hover {
-    color: #8B5CF6;
+    color: #17b6a7;
   }
   .group:hover .text-white {
-    color: #8B5CF6;
+    color: #17b6a7;
   }
 `}</style>
 

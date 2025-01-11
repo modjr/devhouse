@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import StarField from '@/components/star-field'
 import { Navbar } from '@/components/navbar'
+import { Rocket, Target, Users, Zap } from 'lucide-react'
 
 export default function About() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -32,6 +33,13 @@ export default function About() {
     }
   }
 
+  const coreValues = [
+    { icon: <Rocket className="w-8 h-8" />, title: "Innovation", description: "Pushing the boundaries of digital experiences" },
+    { icon: <Target className="w-8 h-8" />, title: "Precision", description: "Crafting pixel-perfect, high-performance solutions" },
+    { icon: <Users className="w-8 h-8" />, title: "Collaboration", description: "Working closely with clients to bring visions to life" },
+    { icon: <Zap className="w-8 h-8" />, title: "Agility", description: "Adapting quickly to new technologies and market needs" }
+  ]
+
   return (
     <main className="relative min-h-screen w-full bg-black overflow-hidden">
       <StarField />
@@ -43,17 +51,17 @@ export default function About() {
         variants={containerVariants}
       >
         <motion.h1 
-          className="text-4xl md:text-6xl font-bold mb-8 text-center"
+          className="text-4xl md:text-6xl font-bold mb-8 text-center font-orbitron"
           variants={itemVariants}
         >
-          Pioneering the Digital Frontier
+          Launching into the Digital Frontier
         </motion.h1>
         
         <motion.p 
           className="text-xl md:text-2xl mb-12 text-center max-w-3xl"
           variants={itemVariants}
         >
-          At [Your Company Name], we're not just building websites and apps - we're crafting digital experiences that push the boundaries of what's possible.
+          At DevHouse, we&apos;re a startup with big dreams. Our mission is to revolutionize the digital landscape with innovative solutions and cutting-edge technologies.
         </motion.p>
         
         <motion.div 
@@ -61,41 +69,39 @@ export default function About() {
           variants={itemVariants}
         >
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
-            <p>To empower businesses and individuals with cutting-edge digital solutions that drive growth, foster innovation, and create meaningful connections in the digital realm.</p>
+            <h2 className="text-2xl font-semibold mb-4 font-orbitron">Our Vision</h2>
+            <p>To be the catalyst for digital transformation, leading the way in creating seamless, intuitive, and impactful digital experiences that shape the future of technology.</p>
           </div>
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Our Vision</h2>
-            <p>To be the catalyst for digital transformation, leading the way in creating seamless, intuitive, and impactful digital experiences that shape the future of technology.</p>
+            <h2 className="text-2xl font-semibold mb-4 font-orbitron">Our Mission</h2>
+            <p>To empower businesses and individuals with cutting-edge digital solutions that drive growth, foster innovation, and create meaningful connections in the digital realm.</p>
           </div>
         </motion.div>
         
         <motion.h2 
-          className="text-3xl md:text-4xl font-semibold mb-8 text-center"
+          className="text-3xl md:text-4xl font-semibold mb-8 text-center font-orbitron"
           variants={itemVariants}
         >
-          Our Journey Through the Digital Cosmos
+          Our Core Values
         </motion.h2>
         
         <motion.div 
-          className="relative max-w-4xl w-full"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full"
           variants={itemVariants}
         >
-          {/* Timeline */}
-          <div className="absolute left-1/2 transform -translate-x-px h-full w-0.5 bg-gradient-to-b from-purple-500 to-blue-500"></div>
-          
-          {[
-            { year: '2018', event: 'Founded with a vision to revolutionize web development' },
-            { year: '2020', event: 'Expanded into mobile app development' },
-            { year: '2022', event: 'Launched our AI-powered design tools' },
-            { year: '2024', event: 'Pioneering the next generation of immersive digital experiences' },
-          ].map((item, index) => (
-            <div key={item.year} className={`mb-8 flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-              <div className={`bg-white/10 backdrop-blur-md p-4 rounded-lg ${index % 2 === 0 ? 'mr-8' : 'ml-8'} max-w-xs`}>
-                <h3 className="text-xl font-semibold mb-2">{item.year}</h3>
-                <p>{item.event}</p>
+          {coreValues.map((value) => (
+            <motion.div 
+              key={value.title}
+              className="bg-white/10 backdrop-blur-md p-6 rounded-lg text-center"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="flex justify-center mb-4 text-[#17b6a7]">
+                {value.icon}
               </div>
-            </div>
+              <h3 className="text-xl font-semibold mb-2 font-orbitron">{value.title}</h3>
+              <p className="text-sm">{value.description}</p>
+            </motion.div>
           ))}
         </motion.div>
         
@@ -103,7 +109,7 @@ export default function About() {
           className="text-xl mt-16 text-center max-w-3xl"
           variants={itemVariants}
         >
-          Join us as we continue to explore new frontiers in the digital universe, creating solutions that are not just ahead of their time, but that define the future.
+          Join us as we embark on this exciting journey to explore new frontiers in the digital universe, creating solutions that are not just ahead of their time, but that define the future.
         </motion.p>
       </motion.div>
     </main>
