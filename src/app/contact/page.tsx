@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import StarField from '@/components/star-field'
 import { Navbar } from '@/components/navbar'
 import { Button } from "@/components/ui/button"
@@ -13,19 +13,50 @@ import { Loader2, Send, Phone, Mail, MapPin } from 'lucide-react'
 export default function Contact() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
 
   useEffect(() => {
     setIsLoaded(true)
   }, [])
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value })
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    // Here you would typically handle the actual form submission
     console.log('Form submitted')
+    setIsSubmitting(true)
+    try {
+      console.log('Sending request to /api/contact')
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      console.log('Response received:', response)
+      const data = await response.json()
+      console.log('Response data:', data)
+      if (data.success) {
+        setShowSuccessMessage(true)
+        setFormData({ name: '', email: '', subject: '', message: '' })
+      } else {
+        alert('Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('An error occurred. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -50,19 +81,50 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="name" className="text-white">Name</Label>
-                <Input type="text" id="name" placeholder="Your Name" required className="bg-white/20 text-white placeholder-gray-400" />
+                <Input 
+                  type="text" 
+                  id="name" 
+                  placeholder="Your Name" 
+                  required 
+                  className="bg-white/20 text-white placeholder-gray-400" 
+                  value={formData.name}
+                  onChange={handleChange}
+                />
               </div>
               <div>
                 <Label htmlFor="email" className="text-white">Email</Label>
-                <Input type="email" id="email" placeholder="your@email.com" required className="bg-white/20 text-white placeholder-gray-400" />
+                <Input 
+                  type="email" 
+                  id="email" 
+                  placeholder="your@email.com" 
+                  required 
+                  className="bg-white/20 text-white placeholder-gray-400" 
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
               <div>
                 <Label htmlFor="subject" className="text-white">Subject</Label>
-                <Input type="text" id="subject" placeholder="Message Subject" required className="bg-white/20 text-white placeholder-gray-400" />
+                <Input 
+                  type="text" 
+                  id="subject" 
+                  placeholder="Message Subject" 
+                  required 
+                  className="bg-white/20 text-white placeholder-gray-400" 
+                  value={formData.subject}
+                  onChange={handleChange}
+                />
               </div>
               <div>
                 <Label htmlFor="message" className="text-white">Message</Label>
-                <Textarea id="message" placeholder="Your message here..." required className="bg-white/20 text-white placeholder-gray-400 min-h-[150px]" />
+                <Textarea 
+                  id="message" 
+                  placeholder="Your message here..." 
+                  required 
+                  className="bg-white/20 text-white placeholder-gray-400 min-h-[150px]" 
+                  value={formData.message}
+                  onChange={handleChange}
+                />
               </div>
               <Button type="submit" className="w-full bg-[#17b6a7] hover:bg-[#14a090] text-white font-orbitron" disabled={isSubmitting}>
                 {isSubmitting ? (
@@ -121,6 +183,24 @@ export default function Contact() {
           </motion.div>
         </div>
       </motion.div>
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-0 left-0 right-0 bg-[#17b6a7] text-white p-4 text-center"
+          >
+            <p className="font-orbitron">Thank you for your message! We will contact you shortly.</p>
+            <Button 
+              onClick={() => setShowSuccessMessage(false)} 
+              className="mt-2 bg-white text-[#17b6a7] hover:bg-gray-100"
+            >
+              Close
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   )
 }
