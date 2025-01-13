@@ -69,7 +69,7 @@ export default function Contact() {
         animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className="text-4xl font-bold text-center text-[#17b6a7] mb-8 font-orbitron">Contact Mission Control</h1>
+        <h1 className="text-4xl font-bold text-center text-[#17b6a7] mb-8 font-orbitron">Contact Us</h1>
         <div className="grid md:grid-cols-2 gap-8">
           <motion.div 
             className="bg-white/10 backdrop-blur-md p-6 rounded-lg"
@@ -77,7 +77,7 @@ export default function Contact() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <h2 className="text-2xl font-semibold text-white mb-4 font-orbitron">Send a Transmission</h2>
+            {/* <h2 className="text-2xl font-semibold text-white mb-4 font-orbitron">Send a Transmission</h2> */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="name" className="text-white">Name</Label>
@@ -148,20 +148,20 @@ export default function Contact() {
             transition={{ delay: 0.4 }}
           >
             <div>
-              <h2 className="text-2xl font-semibold text-white mb-4 font-orbitron">Cosmic Coordinates</h2>
-              <p className="text-gray-300 mb-6">Navigate through the digital cosmos to reach us:</p>
+              <h2 className="text-2xl font-semibold text-white mb-4 font-orbitron">How to reach us</h2>
+              {/* <p className="text-gray-300 mb-6"> How to reach us:</p> */}
               <ul className="space-y-4 text-gray-300">
-                <motion.li className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
+                {/* <motion.li className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
                   <MapPin className="h-6 w-6 text-[#17b6a7]" />
                   <span>123 Nebula Avenue, Cosmic City, Universe 42</span>
-                </motion.li>
+                </motion.li> */}
                 <motion.li className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
                   <Phone className="h-6 w-6 text-[#17b6a7]" />
-                  <span>+1 (234) 567-8900</span>
+                  <span>+2011434584929</span>
                 </motion.li>
                 <motion.li className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
                   <Mail className="h-6 w-6 text-[#17b6a7]" />
-                  <span>transmissions@devhouse.com</span>
+                  <span>contact@devhouse.dev</span>
                 </motion.li>
               </ul>
             </div>

@@ -10,8 +10,9 @@ import { Rocket, Code } from 'lucide-react'
 
 const services = [
   { title: 'Build Your Website', href: '/build-website', icon: <Rocket className="w-8 h-8" />, disabled: false },
-  { title: 'Build Your App', href: '/build-app', icon: <Code className="w-8 h-8" />, disabled: false },
+  { title: 'Build Your App', href: '/build-app', icon: <Code className="w-8 h-8" />, disabled: true }, // Disabled
 ];
+
 
 export default function Dashboard() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -36,7 +37,7 @@ export default function Dashboard() {
           animate={{ y: 0 }}
           transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
         >
-          Mission Control Center
+          Select service needed
         </motion.h1>
         <motion.p
           className="text-xl text-center text-[#17b6a7] mb-12"
@@ -44,38 +45,58 @@ export default function Dashboard() {
           animate={{ y: 0 }}
           transition={{ delay: 0.4, type: 'spring', stiffness: 120 }}
         >
-          Select your cosmic journey
+          {/* Select your cosmic journey */}
         </motion.p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {services.map((service, index) => (
+  {services.map((service, index) => (
+    <motion.div
+      key={service.title}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6 + index * 0.2 }}
+    >
+      {service.disabled ? (
+        <div
+          className="block w-full opacity-50 cursor-not-allowed"
+          aria-disabled="true"
+        >
+          <Button
+            variant="outline"
+            className="w-full h-40 text-lg py-8 bg-white/5 backdrop-blur-sm border-white/20 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-4"
+            disabled
+          >
             <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 + index * 0.2 }}
+              className="text-[#17b6a7]"
+              whileHover={{ scale: 1.2, rotate: 360 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
             >
-              <Link href={service.href} className="block w-full" aria-disabled={service.disabled}>
-                <Button
-                  variant="outline"
-                  className={`w-full h-40 text-lg py-8 bg-white/5 backdrop-blur-sm border-white/20 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-4 ${
-                    service.disabled ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                  disabled={service.disabled}
-                >
-                  <motion.div
-                    className="text-[#17b6a7]"
-                    whileHover={{ scale: 1.2, rotate: 360 }}
-                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                  >
-                    {service.icon}
-                  </motion.div>
-                  <span className="font-orbitron">{service.title}</span>
-                  {service.disabled && <span className="text-sm text-gray-400">Coming Soon</span>}
-                </Button>
-              </Link>
+              {service.icon}
             </motion.div>
-          ))}
+            <span className="font-orbitron">{service.title}</span>
+            <span className="text-sm text-gray-400">Coming Soon</span>
+          </Button>
         </div>
+      ) : (
+        <Link href={service.href} className="block w-full">
+          <Button
+            variant="outline"
+            className="w-full h-40 text-lg py-8 bg-white/5 backdrop-blur-sm border-white/20 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-4"
+          >
+            <motion.div
+              className="text-[#17b6a7]"
+              whileHover={{ scale: 1.2, rotate: 360 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            >
+              {service.icon}
+            </motion.div>
+            <span className="font-orbitron">{service.title}</span>
+          </Button>
+        </Link>
+      )}
+    </motion.div>
+  ))}
+</div>
+
       </motion.div>
     </main>
   )

@@ -56,7 +56,7 @@ export default function Projects() {
           animate={{ y: 0 }}
           className="text-4xl md:text-6xl font-bold text-center text-white mb-4 font-orbitron"
         >
-          Cosmic Creations
+          Latest Projects
         </motion.h1>
         <motion.p
           initial={{ y: -30 }}
