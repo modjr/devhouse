@@ -37,7 +37,7 @@ export default function Dashboard() {
           animate={{ y: 0 }}
           transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
         >
-          Select service needed
+          Select service
         </motion.h1>
         <motion.p
           className="text-xl text-center text-[#17b6a7] mb-12"
