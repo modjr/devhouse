@@ -5,6 +5,7 @@ export interface IContact extends Document {
   email: string;
   subject: string;
   message: string;
+  phone?: string; // Add phone as an optional field
 }
 
 const ContactSchema: Schema = new Schema({
@@ -28,9 +29,13 @@ const ContactSchema: Schema = new Schema({
     required: [true, 'Please provide a message'],
     maxlength: [1000, 'Message cannot be more than 1000 characters'],
   },
+  phone: {
+    type: String,
+    maxlength: [15, 'Phone number cannot be more than 15 characters'],
+    required: false, // Optional field
+  }
 }, {
   timestamps: true,
 });
 
 export default mongoose.models.Contact || mongoose.model<IContact>('Contact', ContactSchema);
-

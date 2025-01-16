@@ -6,6 +6,13 @@ if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
+declare global {
+  var mongoose: {
+    conn: mongoose.Connection | null;
+    promise: Promise<typeof mongoose> | null;
+  };
+}
+
 let cached = global.mongoose;
 
 if (!cached) {
@@ -22,9 +29,9 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      console.log('Connected to MongoDB');
-      return mongoose;
+    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongooseInstance) => {
+      console.info('Connected to MongoDB.');
+      return mongooseInstance.connection;
     });
   }
 

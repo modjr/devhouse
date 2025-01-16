@@ -18,7 +18,8 @@ export default function Contact() {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
+    phone: ''  // New field for phone number
   })
 
   useEffect(() => {
@@ -31,10 +32,8 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Form submitted')
     setIsSubmitting(true)
     try {
-      console.log('Sending request to /api/contact')
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -42,12 +41,10 @@ export default function Contact() {
         },
         body: JSON.stringify(formData),
       })
-      console.log('Response received:', response)
       const data = await response.json()
-      console.log('Response data:', data)
       if (data.success) {
         setShowSuccessMessage(true)
-        setFormData({ name: '', email: '', subject: '', message: '' })
+        setFormData({ name: '', email: '', subject: '', message: '', phone: '' })
       } else {
         alert('Failed to send message. Please try again.')
       }
@@ -63,6 +60,26 @@ export default function Contact() {
     <main className="relative min-h-screen w-full bg-black overflow-hidden flex items-center justify-center">
       <StarField />
       <Navbar />
+      
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed top-0 left-0 right-0 bg-[#17b6a7] text-white p-4 text-center z-50"
+          >
+            <p className="font-orbitron">Thank you for your message! We will contact you shortly.</p>
+            <Button 
+              onClick={() => setShowSuccessMessage(false)} 
+              className="mt-2 bg-white text-[#17b6a7] hover:bg-gray-100"
+            >
+              Close
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         className="relative z-10 w-full max-w-6xl px-4 py-8 mt-16"
         initial={{ opacity: 0, y: 20 }}
@@ -77,7 +94,6 @@ export default function Contact() {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            {/* <h2 className="text-2xl font-semibold text-white mb-4 font-orbitron">Send a Transmission</h2> */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="name" className="text-white">Name</Label>
@@ -88,6 +104,17 @@ export default function Contact() {
                   required 
                   className="bg-white/20 text-white placeholder-gray-400" 
                   value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <Label htmlFor="phone" className="text-white">Phone Number</Label>
+                <Input 
+                  type="tel" 
+                  id="phone" 
+                  placeholder="Your phone number" 
+                  className="bg-white/20 text-white placeholder-gray-400" 
+                  value={formData.phone}
                   onChange={handleChange}
                 />
               </div>
@@ -126,18 +153,14 @@ export default function Contact() {
                   onChange={handleChange}
                 />
               </div>
+              
               <Button type="submit" className="w-full bg-[#17b6a7] hover:bg-[#14a090] text-white font-orbitron" disabled={isSubmitting}>
                 {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending...
-                  </>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
-                  <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Launch Message
-                  </>
+                  <Send className="mr-2 h-4 w-4" />
                 )}
+                {isSubmitting ? 'Sending...' : 'Launch Message'}
               </Button>
             </form>
           </motion.div>
@@ -149,12 +172,7 @@ export default function Contact() {
           >
             <div>
               <h2 className="text-2xl font-semibold text-white mb-4 font-orbitron">How to reach us</h2>
-              {/* <p className="text-gray-300 mb-6"> How to reach us:</p> */}
               <ul className="space-y-4 text-gray-300">
-                {/* <motion.li className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
-                  <MapPin className="h-6 w-6 text-[#17b6a7]" />
-                  <span>123 Nebula Avenue, Cosmic City, Universe 42</span>
-                </motion.li> */}
                 <motion.li className="flex items-center space-x-3" whileHover={{ scale: 1.05 }}>
                   <Phone className="h-6 w-6 text-[#17b6a7]" />
                   <span>+2011434584929</span>
@@ -183,25 +201,6 @@ export default function Contact() {
           </motion.div>
         </div>
       </motion.div>
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-0 left-0 right-0 bg-[#17b6a7] text-white p-4 text-center"
-          >
-            <p className="font-orbitron">Thank you for your message! We will contact you shortly.</p>
-            <Button 
-              onClick={() => setShowSuccessMessage(false)} 
-              className="mt-2 bg-white text-[#17b6a7] hover:bg-gray-100"
-            >
-              Close
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </main>
   )
 }
-

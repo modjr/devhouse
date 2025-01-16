@@ -7,11 +7,13 @@ import { Navbar } from '@/components/navbar'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Loader2 } from 'lucide-react'
 
 export default function BuildWebsiteForm() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     serviceType: 'Build Your Website',
@@ -30,10 +32,9 @@ export default function BuildWebsiteForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Form submitted')
     setIsSubmitting(true)
+    setErrorMessage('')
     try {
-      console.log('Sending request to /api/build-website')
       const response = await fetch('/api/build-website', {
         method: 'POST',
         headers: {
@@ -41,18 +42,16 @@ export default function BuildWebsiteForm() {
         },
         body: JSON.stringify(formData),
       })
-      console.log('Response received:', response)
       const data = await response.json()
-      console.log('Response data:', data)
       if (data.success) {
         setShowSuccessMessage(true)
         setFormData({ email: '', serviceType: 'Build Your Website', mobile: '', firstName: '', lastName: '' })
       } else {
-        alert('Failed to submit form. Please try again.')
+        setErrorMessage(data.error || 'Failed to submit form. Please try again.')
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('An error occurred. Please try again.')
+      setErrorMessage('An error occurred. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -62,6 +61,24 @@ export default function BuildWebsiteForm() {
     <main className="relative min-h-screen w-full bg-black overflow-hidden flex items-center justify-center">
       <StarField />
       <Navbar />
+      <AnimatePresence>
+        {showSuccessMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed top-0 left-0 right-0 bg-[#17b6a7] text-white p-4 text-center z-50"
+          >
+            <p className="font-orbitron">Thank you for your message! We will contact you shortly.</p>
+            <Button 
+              onClick={() => setShowSuccessMessage(false)} 
+              className="mt-2 bg-white text-[#17b6a7] hover:bg-gray-100"
+            >
+              Close
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
         className={`relative z-10 w-full max-w-md px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-xl`}
         initial={{ opacity: 0, y: 20 }}
@@ -133,28 +150,21 @@ export default function BuildWebsiteForm() {
             className="w-full bg-[#17b6a7] hover:bg-[#14a090] text-white"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Submit'
+            )}
           </Button>
+          {errorMessage && (
+            <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+          )}
         </form>
       </motion.div>
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-0 left-0 right-0 bg-[#17b6a7] text-white p-4 text-center"
-          >
-            <p className="font-orbitron">Thank you for your interest! We will contact you shortly to schedule an appointment.</p>
-            <Button 
-              onClick={() => setShowSuccessMessage(false)} 
-              className="mt-2 bg-white text-[#17b6a7] hover:bg-gray-100"
-            >
-              Close
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
     </main>
   )
 }
