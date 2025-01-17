@@ -29,7 +29,8 @@ export async function POST(req: Request) {
       },
     });
 
-    const mailOptions = {
+    // Email to DevHouse
+    const mailOptionsToDevHouse = {
       from: process.env.EMAIL_FROM,
       to: 'contact@devhouse.dev',
       subject: 'New Contact Form Submission',
@@ -39,13 +40,30 @@ export async function POST(req: Request) {
         - Email: ${body.email}
         - Subject: ${body.subject}
         - Message: ${body.message}
-        - Phone: ${body.phone } 
+        - Phone: ${body.phone || 'Not provided'}
       `,
     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully to contact@devhouse.dev');
+    // Email to the user
+    const mailOptionsToUser = {
+      from: process.env.EMAIL_FROM,
+      to: body.email,
+      subject: 'Thank You for Reaching Out',
+      text: `
+Hello ${body.name},
+
+Thank you for contacting us! We've received your request and will get back to you shortly.
+Looking forward to helping you bring your project vision to life!
+
+Best regards,
+DevHouse
+      `,
+    };
+
+    // Send emails
+    await transporter.sendMail(mailOptionsToDevHouse);
+    await transporter.sendMail(mailOptionsToUser);
+    console.log('Emails sent successfully');
 
     return NextResponse.json({ success: true, data: contact }, { status: 201 });
   } catch (error) {
@@ -53,3 +71,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, error: 'Something went wrong' }, { status: 500 });
   }
 }
+
