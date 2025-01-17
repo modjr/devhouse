@@ -85,7 +85,7 @@ export default function HomePage() {
               </div>
               <div className="w-full md:w-1/2">
                 <Image
-                  src="/images/optima.png"
+                  src="static/Images/optima.png"
                   alt="Latest Project"
                   width={400}
                   height={300}
