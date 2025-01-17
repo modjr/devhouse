@@ -39,7 +39,7 @@ export default function HomePage() {
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Embark on a cosmic journey through the digital universe. We craft stellar websites and applications that push the boundaries of innovation.
             </p>
-            <Link href="/build-website" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#17b6a7] hover:bg-[#149e92] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
+            <Link href="/dashboard" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#17b6a7] hover:bg-[#149e92] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
               Start Your Project
               <ArrowRight className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
             </Link>
