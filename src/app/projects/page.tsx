@@ -19,7 +19,7 @@ export default function Projects() {
     {
       title: "Kalb Wotta Clinic",
       description: "A modern veterinary clinic website providing comprehensive pet healthcare services. Features appointment booking, medical records, and preventive care information.",
-      image: "/images/kalbwottaClinic.jpg",
+      image: "/static/Images/kalbwottaClinic.jpg",
       liveUrl: "https://kalbwotta.clinic",
       icon: <Stethoscope className="w-6 h-6" />,
       color: "from-blue-500/20 to-blue-600/20"
@@ -27,7 +27,7 @@ export default function Projects() {
     {
       title: "Kalb Wotta Store",
       description: "A full-featured pet store e-commerce platform offering a wide range of pet supplies, medications, and accessories. Complete with shopping cart and category management.",
-      image: "/images/kalbstore.png",
+      image: "/static/Images/kalbstore.png",
       liveUrl: "https://kalbwotta.store",
       icon: <ShoppingBag className="w-6 h-6" />,
       color: "from-green-500/20 to-green-600/20"
@@ -35,7 +35,7 @@ export default function Projects() {
     {
       title: "Optima Furniture",
       description: "An elegant furniture company website showcasing premium kitchen designs and installations. Features project galleries and consultation booking.",
-      image: "/images/optima.png",
+      image: "/static/Images/optima.png",
       liveUrl: "https://optima-furniture.com",
       icon: <Home className="w-6 h-6" />,
       color: "from-amber-500/20 to-amber-600/20"
