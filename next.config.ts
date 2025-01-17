@@ -2,7 +2,7 @@ import { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['v0.blob.com', 'localhost', 'placehold.co', 'https://devhouse-ten.vercel.app/'],
+    domains: ['v0.blob.com', 'localhost', 'placehold.co', 'https://devhouse-ten.vercel.app/','www.devhouse.dev', 'devhouse.dev'],
     remotePatterns: [
       {
         protocol: 'https',
