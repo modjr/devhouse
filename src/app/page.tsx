@@ -29,7 +29,7 @@ export default function Home() {
       <div className={`relative z-10 flex flex-col items-center gap-8 text-white transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${isNavigating ? 'opacity-0' : ''}`}>
         <div className="flex items-center">
           <Image
-            src="/images/logo1.png"
+            src="/static/Images/logo1.png"
             alt="DevHouse Logo"
             width={400}
             height={400}
