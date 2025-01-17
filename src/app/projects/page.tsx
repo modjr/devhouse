@@ -19,7 +19,7 @@ export default function Projects() {
     {
       title: "Kalb Wotta Clinic",
       description: "A modern veterinary clinic website providing comprehensive pet healthcare services. Features appointment booking, medical records, and preventive care information.",
-      image: "/placeholder.svg?height=338&width=600",
+      image: "/images/kalbwottaClinic.jpg",
       liveUrl: "https://kalbwotta.clinic",
       icon: <Stethoscope className="w-6 h-6" />,
       color: "from-blue-500/20 to-blue-600/20"
@@ -56,7 +56,7 @@ export default function Projects() {
           animate={{ y: 0 }}
           className="text-4xl md:text-6xl font-bold text-center text-white mb-4 font-orbitron"
         >
-          Cosmic Creations
+          Latest Projects
         </motion.h1>
         <motion.p
           initial={{ y: -30 }}
