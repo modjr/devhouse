@@ -10,7 +10,7 @@ import { Rocket, Code } from 'lucide-react'
 
 const services = [
   { title: 'Build Your Website', href: '/build-website', icon: <Rocket className="w-8 h-8" />, disabled: false },
-  { title: 'Build Your App', href: '/build-app', icon: <Code className="w-8 h-8" />, disabled: true }, // Disabled
+  { title: 'Build Your Mobile App', href: '/build-app', icon: <Code className="w-8 h-8" />, disabled: true }, // Disabled
 ];
 
 

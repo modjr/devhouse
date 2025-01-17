@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
+import { isValidEmail } from '@/lib/utils'
 
 export default function BuildWebsiteForm() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -21,6 +22,7 @@ export default function BuildWebsiteForm() {
     firstName: '',
     lastName: ''
   })
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     setIsLoaded(true)
@@ -34,6 +36,34 @@ export default function BuildWebsiteForm() {
     e.preventDefault()
     setIsSubmitting(true)
     setErrorMessage('')
+    setValidationErrors({})
+
+    let hasErrors = false
+
+    // Validate phone number
+    const phoneRegex = /^(010|011|012|015)\d{8}$/
+    if (!phoneRegex.test(formData.mobile)) {
+      setValidationErrors(prev => ({
+        ...prev,
+        mobile: "Phone number must be 11 digits and start with 010, 011, 012, or 015"
+      }))
+      hasErrors = true
+    }
+
+    // Validate email
+    if (!isValidEmail(formData.email)) {
+      setValidationErrors(prev => ({
+        ...prev,
+        email: "Please enter a valid email address"
+      }))
+      hasErrors = true
+    }
+
+    if (hasErrors) {
+      setIsSubmitting(false)
+      return
+    }
+
     try {
       const response = await fetch('/api/build-website', {
         method: 'POST',
@@ -98,6 +128,7 @@ export default function BuildWebsiteForm() {
               value={formData.email}
               onChange={handleChange}
             />
+            {validationErrors.email && <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>}
           </div>
           <div>
             <Label htmlFor="serviceType" className="text-white">Service Type</Label>
@@ -120,6 +151,7 @@ export default function BuildWebsiteForm() {
               value={formData.mobile}
               onChange={handleChange}
             />
+            {validationErrors.mobile && <p className="text-red-500 text-sm mt-1">{validationErrors.mobile}</p>}
           </div>
           <div>
             <Label htmlFor="firstName" className="text-white">First Name</Label>

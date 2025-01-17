@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Loader2, Send, Phone, Mail, MapPin } from 'lucide-react'
+import { Loader2, Send, Phone, Mail } from 'lucide-react'
+import { isValidEmail } from '@/lib/utils'
 
 export default function Contact() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -21,6 +22,7 @@ export default function Contact() {
     message: '',
     phone: ''  // New field for phone number
   })
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     setIsLoaded(true)
@@ -33,6 +35,34 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setValidationErrors({})
+
+    let hasErrors = false
+
+    // Validate phone number
+    const phoneRegex = /^(010|011|012|015)\d{8}$/
+    if (formData.phone && !phoneRegex.test(formData.phone)) {
+      setValidationErrors(prev => ({
+        ...prev,
+        phone: "Phone number must be 11 digits and start with 010, 011, 012, or 015"
+      }))
+      hasErrors = true
+    }
+
+    // Validate email
+    if (!isValidEmail(formData.email)) {
+      setValidationErrors(prev => ({
+        ...prev,
+        email: "Please enter a valid email address"
+      }))
+      hasErrors = true
+    }
+
+    if (hasErrors) {
+      setIsSubmitting(false)
+      return
+    }
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -117,6 +147,7 @@ export default function Contact() {
                   value={formData.phone}
                   onChange={handleChange}
                 />
+                {validationErrors.phone && <p className="text-red-500 text-sm mt-1">{validationErrors.phone}</p>}
               </div>
               <div>
                 <Label htmlFor="email" className="text-white">Email</Label>
@@ -129,6 +160,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {validationErrors.email && <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>}
               </div>
               <div>
                 <Label htmlFor="subject" className="text-white">Subject</Label>
@@ -204,3 +236,4 @@ export default function Contact() {
     </main>
   )
 }
+
