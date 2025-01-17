@@ -28,7 +28,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
           <Image
-            src="/images/logo1.png"
+            src="static/Images/logo1.png"
             alt="DevHouse Logo"
             width={150}
             height={150}
