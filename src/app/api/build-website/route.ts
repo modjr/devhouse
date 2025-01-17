@@ -29,7 +29,8 @@ export async function POST(req: Request) {
       },
     });
 
-    const mailOptions = {
+    // Email to DevHouse
+    const mailOptionsToDevHouse = {
       from: process.env.EMAIL_FROM,
       to: 'contact@devhouse.dev',
       subject: 'New Website Build Request',
@@ -43,9 +44,26 @@ export async function POST(req: Request) {
       `,
     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully to contact@devhouse.dev');
+    // Email to the user
+    const mailOptionsToUser = {
+      from: process.env.EMAIL_FROM,
+      to: body.email,
+      subject: 'Thank You for Reaching Out',
+      text: `
+Hello ${body.firstName},
+
+Thank you for contacting us! We've received your request and will get back to you shortly.
+Looking forward to helping you bring your project vision to life!
+
+Best regards,
+DevHouse
+      `,
+    };
+
+    // Send emails
+    await transporter.sendMail(mailOptionsToDevHouse);
+    await transporter.sendMail(mailOptionsToUser);
+    console.log('Emails sent successfully');
 
     return NextResponse.json({ success: true, data: buildWebsite }, { status: 201 });
   } catch (error) {
