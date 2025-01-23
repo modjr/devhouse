@@ -19,7 +19,7 @@ export default function Home() {
     e.preventDefault()
     setIsNavigating(true)
     setTimeout(() => {
-      router.push('/dashboard')
+      router.push('/home')
     }, 500) // Delay navigation to allow fade-out animation
   }
 
@@ -29,13 +29,13 @@ export default function Home() {
       <div className={`relative z-10 flex flex-col items-center gap-8 text-white transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${isNavigating ? 'opacity-0' : ''}`}>
         <div className="flex items-center">
           <Image
-            src="/static/Images/logo1.png"
+            src="/static/Images/logoblackb2.png"
             alt="DevHouse Logo"
             width={400}
             height={400}
           />
         </div>
-        <Link href="/dashboard" onClick={handleNavigation} className="relative group">
+        <Link href="/home" onClick={handleNavigation} className="relative group">
           <motion.div
             className="absolute -inset-0.5 bg-[#17b6a7] rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"
             animate={{

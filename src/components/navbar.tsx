@@ -1,39 +1,43 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
-import { cn } from "@/lib/utils"
-import Image from 'next/image'
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const navItems = [
-  { href: '/home', label: 'Home' },
-  { href: '/dashboard', label: 'Services' },
-  { href: '/about', label: 'About' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/contact', label: 'Contact' },
-]
+  { href: "/home", label: "Home" },
+  { href: "/dashboard", label: "Services" },
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/contact", label: "Contact" },
+];
 
 export function Navbar() {
-  const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen(!isOpen)
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-          <Image
-            src="static/Images/logo1.png"
-            alt="DevHouse Logo"
-            width={150}
-            height={150}
-          />
+            <Link href="/home">
+              <Image
+                src="/static/Images/logoblackb2.png"
+                alt="DevHouse Logo"
+                width={150}
+                height={150}
+                className="cursor-pointer"
+              />
+            </Link>
           </div>
+
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               {navItems.map((item) => (
@@ -46,7 +50,7 @@ export function Navbar() {
                   )}
                 >
                   {item.label}
-                  <span 
+                  <span
                     className={cn(
                       "absolute bottom-0 left-0 w-full h-0.5 bg-[#17b6a7] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100",
                       pathname === item.href && "scale-x-100"
@@ -101,6 +105,5 @@ export function Navbar() {
         )}
       </AnimatePresence>
     </nav>
-  )
+  );
 }
-

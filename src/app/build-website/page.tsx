@@ -1,28 +1,32 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import StarField from '@/components/star-field'
-import { Navbar } from '@/components/navbar'
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { useRouter } from "next/navigation"
+import StarField from "@/components/star-field"
+import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2 } from 'lucide-react'
-import { isValidEmail } from '@/lib/utils'
+import { Loader2 } from "lucide-react"
+import { isValidEmail } from "@/lib/utils"
 
 export default function BuildWebsiteForm() {
+  const router = useRouter()
   const [isLoaded, setIsLoaded] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState("")
   const [formData, setFormData] = useState({
-    email: '',
-    serviceType: 'Build Your Website',
-    mobile: '',
-    firstName: '',
-    lastName: ''
+    email: "",
+    serviceType: "Build Your Website",
+    mobile: "",
+    firstName: "",
+    lastName: "",
   })
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const [showOtpInput, setShowOtpInput] = useState(false)
+  const [otp, setOtp] = useState("")
 
   useEffect(() => {
     setIsLoaded(true)
@@ -32,29 +36,87 @@ export default function BuildWebsiteForm() {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
+  const sendOtp = async () => {
+    if (!isValidEmail(formData.email)) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        email: "Please enter a valid email address",
+      }))
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: formData.email }),
+      })
+
+      if (response.ok) {
+        setShowOtpInput(true)
+        setErrorMessage("OTP sent successfully. Please check your email.")
+      } else {
+        const data = await response.json()
+        setErrorMessage(data.error || "Failed to send OTP. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      setErrorMessage("An error occurred. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const verifyOtp = async () => {
+    setIsSubmitting(true)
+    try {
+      const response = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: formData.email, otp }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setIsEmailVerified(true)
+        setShowOtpInput(false)
+        setErrorMessage("Email verified successfully.")
+      } else {
+        setErrorMessage(data.error || "Invalid OTP. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+      setErrorMessage("An error occurred. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!isEmailVerified) {
+      setErrorMessage("Please verify your email before submitting.")
+      return
+    }
+
     setIsSubmitting(true)
-    setErrorMessage('')
+    setErrorMessage("")
     setValidationErrors({})
 
     let hasErrors = false
 
-    // Validate phone number
-    const phoneRegex = /^(010|011|012|015)\d{8}$/
-    if (!phoneRegex.test(formData.mobile)) {
-      setValidationErrors(prev => ({
+    // Validate mobile number
+    const mobileRegex = /^(010|011|012|015)\d{8}$/
+    if (!mobileRegex.test(formData.mobile)) {
+      setValidationErrors((prev) => ({
         ...prev,
-        mobile: "Phone number must be 11 digits and start with 010, 011, 012, or 015"
-      }))
-      hasErrors = true
-    }
-
-    // Validate email
-    if (!isValidEmail(formData.email)) {
-      setValidationErrors(prev => ({
-        ...prev,
-        email: "Please enter a valid email address"
+        mobile: "Mobile number must be 11 digits and start with 010, 011, 012, or 015",
       }))
       hasErrors = true
     }
@@ -65,23 +127,22 @@ export default function BuildWebsiteForm() {
     }
 
     try {
-      const response = await fetch('/api/build-website', {
-        method: 'POST',
+      const response = await fetch("/api/build-website", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       })
-      const data = await response.json()
-      if (data.success) {
-        setShowSuccessMessage(true)
-        setFormData({ email: '', serviceType: 'Build Your Website', mobile: '', firstName: '', lastName: '' })
+
+      if (response.ok) {
+        router.push("/thank-you")
       } else {
-        setErrorMessage(data.error || 'Failed to submit form. Please try again.')
+        setErrorMessage("Failed to submit form. Please try again.")
       }
     } catch (error) {
-      console.error('Error:', error)
-      setErrorMessage('An error occurred. Please try again.')
+      console.error("Error:", error)
+      setErrorMessage("An error occurred. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -91,24 +152,6 @@ export default function BuildWebsiteForm() {
     <main className="relative min-h-screen w-full bg-black overflow-hidden flex items-center justify-center">
       <StarField />
       <Navbar />
-      <AnimatePresence>
-        {showSuccessMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed top-0 left-0 right-0 bg-[#17b6a7] text-white p-4 text-center z-50"
-          >
-            <p className="font-orbitron">Thank you for your message! We will contact you shortly.</p>
-            <Button 
-              onClick={() => setShowSuccessMessage(false)} 
-              className="mt-2 bg-white text-[#17b6a7] hover:bg-gray-100"
-            >
-              Close
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
       <motion.div
         className={`relative z-10 w-full max-w-md px-4 py-8 bg-white/10 backdrop-blur-md rounded-lg shadow-xl`}
         initial={{ opacity: 0, y: 20 }}
@@ -118,85 +161,141 @@ export default function BuildWebsiteForm() {
         <h1 className="text-3xl font-bold text-center text-white mb-6">Build Your Website</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="email" className="text-white">Email</Label>
-            <Input 
-              type="email" 
-              id="email" 
-              placeholder="your@email.com" 
-              required 
-              className="bg-white/20 text-white placeholder-gray-300" 
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <Label htmlFor="email" className="text-white">
+              Email
+            </Label>
+            <div className="flex space-x-2">
+              <Input
+                type="email"
+                id="email"
+                placeholder="your@email.com"
+                required
+                className="bg-white/20 text-white placeholder-gray-300 flex-grow"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isEmailVerified}
+              />
+              {!isEmailVerified && (
+                <Button
+                  type="button"
+                  onClick={sendOtp}
+                  className="bg-[#17b6a7] hover:bg-[#14a090] text-white"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify"}
+                </Button>
+              )}
+            </div>
             {validationErrors.email && <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>}
           </div>
-          <div>
-            <Label htmlFor="serviceType" className="text-white">Service Type</Label>
-            <Input 
-              type="text" 
-              id="serviceType" 
-              value={formData.serviceType} 
-              disabled 
-              className="bg-white/20 text-white" 
-            />
-          </div>
-          <div>
-            <Label htmlFor="mobile" className="text-white">Mobile Number</Label>
-            <Input 
-              type="tel" 
-              id="mobile" 
-              placeholder="+1234567890" 
-              required 
-              className="bg-white/20 text-white placeholder-gray-300" 
-              value={formData.mobile}
-              onChange={handleChange}
-            />
-            {validationErrors.mobile && <p className="text-red-500 text-sm mt-1">{validationErrors.mobile}</p>}
-          </div>
-          <div>
-            <Label htmlFor="firstName" className="text-white">First Name</Label>
-            <Input 
-              type="text" 
-              id="firstName" 
-              placeholder="John" 
-              required 
-              className="bg-white/20 text-white placeholder-gray-300" 
-              value={formData.firstName}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <Label htmlFor="lastName" className="text-white">Last Name</Label>
-            <Input 
-              type="text" 
-              id="lastName" 
-              placeholder="Doe" 
-              required 
-              className="bg-white/20 text-white placeholder-gray-300" 
-              value={formData.lastName}
-              onChange={handleChange}
-            />
-          </div>
-          <Button 
-            type="submit" 
-            className="w-full bg-[#17b6a7] hover:bg-[#14a090] text-white"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              'Submit'
-            )}
-          </Button>
+          {showOtpInput && (
+            <div>
+              <Label htmlFor="otp" className="text-white">
+                OTP
+              </Label>
+              <div className="flex space-x-2">
+                <Input
+                  type="text"
+                  id="otp"
+                  placeholder="Enter OTP"
+                  required
+                  className="bg-white/20 text-white placeholder-gray-300 flex-grow"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                />
+                <Button
+                  type="button"
+                  onClick={verifyOtp}
+                  className="bg-[#17b6a7] hover:bg-[#14a090] text-white"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit OTP"}
+                </Button>
+              </div>
+            </div>
+          )}
+          {isEmailVerified && (
+            <>
+              <div>
+                <Label htmlFor="serviceType" className="text-white">
+                  Service Type
+                </Label>
+                <Input
+                  type="text"
+                  id="serviceType"
+                  value={formData.serviceType}
+                  disabled
+                  className="bg-white/20 text-white"
+                />
+              </div>
+              <div>
+                <Label htmlFor="mobile" className="text-white">
+                  Mobile Number
+                </Label>
+                <Input
+                  type="tel"
+                  id="mobile"
+                  placeholder="01xxxxxxxxx"
+                  required
+                  className="bg-white/20 text-white placeholder-gray-300"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                />
+                {validationErrors.mobile && <p className="text-red-500 text-sm mt-1">{validationErrors.mobile}</p>}
+              </div>
+              <div>
+                <Label htmlFor="firstName" className="text-white">
+                  First Name
+                </Label>
+                <Input
+                  type="text"
+                  id="firstName"
+                  placeholder="John"
+                  required
+                  className="bg-white/20 text-white placeholder-gray-300"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <Label htmlFor="lastName" className="text-white">
+                  Last Name
+                </Label>
+                <Input
+                  type="text"
+                  id="lastName"
+                  placeholder="Doe"
+                  required
+                  className="bg-white/20 text-white placeholder-gray-300"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full bg-[#17b6a7] hover:bg-[#14a090] text-white"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </>
+          )}
           {errorMessage && (
-            <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+            <p
+              className={`text-center mt-2 ${errorMessage.includes("successfully") ? "text-green-500" : "text-red-500"}`}
+            >
+              {errorMessage}
+            </p>
           )}
         </form>
       </motion.div>
-      
     </main>
   )
 }
