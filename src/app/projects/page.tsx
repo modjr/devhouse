@@ -19,7 +19,7 @@ export default function Projects() {
     {
       title: "Black Diamond Construction Company",
       description: "A premium construction and real estate company website showcasing high-end building, finishing, and property services. Highlights include project portfolios, service details, and direct contact options for clients seeking professional construction and real estate solutions.",
-      image: "/static/Images/blackdiamond.png",
+      image: "/static/Images/blackDiamond.png",
       liveUrl: "https://www.blackdiamondegy.com/",
       icon: <Home className="w-6 h-6"  />,
       color: "from-amber-500/20 to-amber-600/20"
