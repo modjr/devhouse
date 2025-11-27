@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import StarField from '@/components/star-field'
 import { Navbar } from '@/components/navbar'
-import { ExternalLink, Rocket, Stethoscope, ShoppingBag, Home } from 'lucide-react'
+import { ExternalLink, Rocket, ShoppingBag, Home } from 'lucide-react'
 
 export default function Projects() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -24,30 +24,30 @@ export default function Projects() {
       icon: <Home className="w-6 h-6"  />,
       color: "from-amber-500/20 to-amber-600/20"
     },
-    {
-      title: "Kalb Wotta Clinic",
-      description: "A modern veterinary clinic website providing comprehensive pet healthcare services. Features appointment booking, medical records, and preventive care information.",
-      image: "/static/Images/kalbwottaClinic.jpg",
-      liveUrl: "https://kalbwotta.clinic",
-      icon: <Stethoscope className="w-6 h-6" />,
-      color: "from-blue-500/20 to-blue-600/20"
-    },
-    {
-      title: "Kalb Wotta Store",
-      description: "A full-featured pet store e-commerce platform offering a wide range of pet supplies, medications, and accessories. Complete with shopping cart and category management.",
-      image: "/static/Images/kalbstore.png",
-      liveUrl: "https://kalbwotta.store",
-      icon: <ShoppingBag className="w-6 h-6" />,
-      color: "from-green-500/20 to-green-600/20"
-    },
-    {
-      title: "Optima Furniture",
-      description: "An elegant furniture company website showcasing premium kitchen designs and installations. Features project galleries and consultation booking.",
-      image: "/static/Images/optima.png",
-      liveUrl: "https://optima-furniture.com",
-      icon: <Home className="w-6 h-6" />,
-      color: "from-amber-500/20 to-amber-600/20"
-    },
+    // {
+    //   title: "Kalb Wotta Clinic",
+    //   description: "A modern veterinary clinic website providing comprehensive pet healthcare services. Features appointment booking, medical records, and preventive care information.",
+    //   image: "/static/Images/kalbwottaClinic.jpg",
+    //   liveUrl: "https://kalbwotta.clinic",
+    //   icon: <Stethoscope className="w-6 h-6" />,
+    //   color: "from-blue-500/20 to-blue-600/20"
+    // },
+    // {
+    //   title: "Kalb Wotta Store",
+    //   description: "A full-featured pet store e-commerce platform offering a wide range of pet supplies, medications, and accessories. Complete with shopping cart and category management.",
+    //   image: "/static/Images/kalbstore.png",
+    //   liveUrl: "https://kalbwotta.store",
+    //   icon: <ShoppingBag className="w-6 h-6" />,
+    //   color: "from-green-500/20 to-green-600/20"
+    // },
+    // {
+    //   title: "Optima Furniture",
+    //   description: "An elegant furniture company website showcasing premium kitchen designs and installations. Features project galleries and consultation booking.",
+    //   image: "/static/Images/optima.png",
+    //   liveUrl: "https://optima-furniture.com",
+    //   icon: <Home className="w-6 h-6" />,
+    //   color: "from-amber-500/20 to-amber-600/20"
+    // },
     {
       title: "IbnSina Supermarket",
       description: "A modern veterinary clinic website providing comprehensive pet healthcare services. Features appointment booking, medical records, and preventive care information.",
@@ -89,19 +89,19 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="relative group"
+              className="relative group h-full"
               onHoverStart={() => setHoveredProject(index)}
               onHoverEnd={() => setHoveredProject(null)}
             >
               <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${project.color} blur-xl group-hover:blur-2xl transition-all duration-500`} />
-              <div className="relative bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10">
-                <div className="aspect-video relative overflow-hidden">
+              <div className="relative bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 h-full flex flex-col">
+                <div className="aspect-[4/3] relative overflow-hidden bg-black/20">
                   <Image
                     src={project.image}
                     alt={project.title}
                     width={600}
-                    height={338}
-                    className="object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    height={450}
+                    className="object-contain w-full h-full transform group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <a
@@ -114,14 +114,14 @@ export default function Projects() {
                     </a>
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-3">
+                <div className="p-4 flex-1 flex flex-col">
+                  <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 rounded-full bg-[#17b6a7]/10 flex items-center justify-center text-[#17b6a7]">
                       {project.icon}
                     </div>
-                    <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                    <h3 className="text-lg font-bold text-white line-clamp-1">{project.title}</h3>
                   </div>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
                     {project.description}
                   </p>
                 </div>
