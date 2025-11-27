@@ -61,7 +61,7 @@ export default function ThankYouPage() {
           <div className="flex items-center justify-center gap-2 text-gray-300 mb-2">
             <Mail className="h-5 w-5 text-[#17b6a7]" />
             <p className="text-lg">
-              An email has been sent to your inbox. We'll contact you shortly!
+              An email has been sent to your inbox. We&apos;ll contact you shortly!
             </p>
           </div>
         </div>
