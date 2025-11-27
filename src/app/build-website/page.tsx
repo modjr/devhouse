@@ -136,6 +136,8 @@ export default function BuildWebsiteForm() {
       })
 
       if (response.ok) {
+        // Store submission data in sessionStorage for thank-you page
+        sessionStorage.setItem("submissionData", JSON.stringify(formData))
         router.push("/thank-you")
       } else {
         setErrorMessage("Failed to submit form. Please try again.")
